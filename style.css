@@ -1,0 +1,504 @@
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --bg: #05030b;
+    --panel: rgba(18, 10, 35, 0.78);
+
+    --purple: #9d4edd;
+    --purple-light: #c77dff;
+
+    --cyan: #00e5ff;
+    --pink: #ff2ea6;
+
+    --text: #f5eaff;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    font-family: Arial, sans-serif;
+
+    color: var(--text);
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(157, 78, 221, 0.25),
+            transparent 35%
+        ),
+
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(0, 229, 255, 0.12),
+            transparent 35%
+        ),
+
+        radial-gradient(
+            circle at 50% 50%,
+            #160827,
+            #05030b 70%
+        );
+}
+
+
+/* نورهای پس زمینه */
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background: #7b2cff;
+
+    filter: blur(130px);
+
+    opacity: 0.15;
+
+    top: -100px;
+    left: -100px;
+
+    pointer-events: none;
+}
+
+
+body::after {
+
+    content: "";
+
+    position: fixed;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background: #00e5ff;
+
+    filter: blur(140px);
+
+    opacity: 0.10;
+
+    bottom: -100px;
+    right: -100px;
+
+    pointer-events: none;
+}
+
+
+/* پنل اصلی */
+
+.game {
+
+    width: min(92vw, 430px);
+
+    padding: 28px 22px;
+
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(35, 18, 60, 0.88),
+            rgba(8, 5, 18, 0.94)
+        );
+
+    border: 1px solid rgba(199, 125, 255, 0.28);
+
+    box-shadow:
+        0 0 30px rgba(157, 78, 221, 0.22),
+        0 0 80px rgba(91, 33, 182, 0.12),
+        inset 0 0 35px rgba(157, 78, 221, 0.06);
+
+    backdrop-filter: blur(20px);
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* خط نور بالای پنل */
+
+.game::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 15%;
+
+    width: 70%;
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #c77dff,
+            #00e5ff,
+            transparent
+        );
+
+    box-shadow:
+        0 0 15px #c77dff,
+        0 0 30px #00e5ff;
+}
+
+
+/* عنوان */
+
+h1 {
+
+    margin: 0;
+
+    text-align: center;
+
+    font-size: 72px;
+
+    font-weight: 900;
+
+    letter-spacing: 8px;
+
+    color: #ffffff;
+
+    text-shadow:
+        0 0 5px #ffffff,
+        0 0 15px #c77dff,
+        0 0 35px #9d4edd,
+        0 0 70px #7b2cff;
+
+    animation: titleGlow 2.5s infinite alternate;
+}
+
+
+@keyframes titleGlow {
+
+    from {
+        filter: brightness(0.9);
+    }
+
+    to {
+        filter: brightness(1.25);
+    }
+}
+
+
+/* نوشته نوبت */
+
+#turn {
+
+    margin: 8px 0 22px;
+
+    text-align: center;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    color: #d9c7ef;
+
+    text-shadow:
+        0 0 10px rgba(199, 125, 255, 0.7);
+}
+
+
+/* صفحه بازی */
+
+.board {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+
+    padding: 14px;
+
+    border-radius: 24px;
+
+    background:
+        rgba(5, 3, 12, 0.65);
+
+    border:
+        1px solid rgba(199, 125, 255, 0.18);
+
+    box-shadow:
+        inset 0 0 25px rgba(157, 78, 221, 0.08),
+        0 0 20px rgba(157, 78, 221, 0.08);
+}
+
+
+/* خانه ها */
+
+.cell {
+
+    position: relative;
+
+    aspect-ratio: 1 / 1;
+
+    border-radius: 18px;
+
+    border:
+        1px solid rgba(199, 125, 255, 0.22);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(42, 23, 66, 0.9),
+            rgba(13, 8, 25, 0.95)
+        );
+
+    color: white;
+
+    font-size: clamp(45px, 13vw, 65px);
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
+
+    box-shadow:
+        inset 0 0 15px rgba(157, 78, 221, 0.05);
+}
+
+
+/* نور داخلی خانه */
+
+.cell::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: inherit;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(157, 78, 221, 0.13),
+            transparent 65%
+        );
+
+    opacity: 0;
+
+    transition: 0.2s;
+
+    pointer-events: none;
+}
+
+
+/* Hover */
+
+.cell:hover {
+
+    transform: translateY(-3px) scale(1.025);
+
+    border-color:
+        rgba(199, 125, 255, 0.75);
+
+    box-shadow:
+        0 0 12px rgba(157, 78, 221, 0.35),
+        0 0 30px rgba(157, 78, 221, 0.18),
+        inset 0 0 20px rgba(157, 78, 221, 0.1);
+}
+
+
+.cell:hover::before {
+
+    opacity: 1;
+}
+
+
+/* X */
+
+.cell.x {
+
+    color: var(--cyan);
+
+    border-color:
+        rgba(0, 229, 255, 0.65);
+
+    text-shadow:
+        0 0 5px #fff,
+        0 0 10px #00e5ff,
+        0 0 25px #00e5ff,
+        0 0 50px #008cff;
+
+    animation: neonX 0.35s ease;
+}
+
+
+/* O */
+
+.cell.o {
+
+    color: var(--pink);
+
+    border-color:
+        rgba(255, 46, 166, 0.65);
+
+    text-shadow:
+        0 0 5px #fff,
+        0 0 10px #ff2ea6,
+        0 0 25px #ff2ea6,
+        0 0 50px #ff007f;
+
+    animation: neonO 0.35s ease;
+}
+
+
+/* انیمیشن X */
+
+@keyframes neonX {
+
+    0% {
+        transform: scale(0.2);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+/* انیمیشن O */
+
+@keyframes neonO {
+
+    0% {
+        transform: scale(0.2) rotate(-20deg);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0);
+        opacity: 1;
+    }
+}
+
+
+/* دکمه شروع دوباره */
+
+#restart {
+
+    width: 100%;
+
+    margin-top: 22px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 16px;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7b2cff,
+            #c23cff
+        );
+
+    box-shadow:
+        0 0 15px rgba(157, 78, 221, 0.5),
+        0 0 35px rgba(157, 78, 221, 0.2);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+
+#restart:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(199, 125, 255, 0.8),
+        0 0 45px rgba(157, 78, 221, 0.35);
+}
+
+
+#restart:active {
+
+    transform: scale(0.97);
+
+}
+
+
+/* موبایل */
+
+@media (max-width: 450px) {
+
+    .game {
+
+        padding: 22px 16px;
+
+        border-radius: 25px;
+
+    }
+
+    h1 {
+
+        font-size: 58px;
+
+    }
+
+    .board {
+
+        gap: 9px;
+
+        padding: 10px;
+
+    }
+
+    .cell {
+
+        border-radius: 15px;
+
+    }
+
+}
