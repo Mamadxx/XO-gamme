@@ -1,67 +1,51 @@
 const cells = document.querySelectorAll(".cell");
-
-const statusText = document.getElementById("status");
-
+const turnText = document.getElementById("turn");
 const restartButton = document.getElementById("restart");
 
+let board = ["", "", "", "", "", "", "", "", ""];
 let currentPlayer = "X";
+let gameRunning = true;
 
-let gameActive = true;
-
-let board = [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-];
-
-
-const winningPatterns = [
-
+const wins = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
-
     [0, 3, 6],
     [1, 4, 7],
     [2, 5, 8],
-
     [0, 4, 8],
     [2, 4, 6]
-
 ];
 
+cells.forEach((cell, index) => {
 
-function play(index) {
+    cell.addEventListener("click", function () {
 
-    if (!gameActive) {
-        return;
-    }
+        console.log("Clicked cell:", index);
 
-    if (board[index] !== "") {
-        return;
-    }
+        if (!gameRunning) return;
 
-    board[index] = currentPlayer;
+        if (board[index] !== "") return;
 
-    cells[index].textContent = currentPlayer;
+        board[index] = currentPlayer;
 
-    checkWinner();
+        cell.textContent = currentPlayer;
 
-}
+        if (currentPlayer === "X") {
+            cell.classList.add("x");
+        } else {
+            cell.classList.add("o");
+        }
 
+        checkWinner();
+    });
+});
 
 function checkWinner() {
 
-    for (let pattern of winningPatterns) {
+    for (const combination of wins) {
 
-        const a = pattern[0];
-        const b = pattern[1];
-        const c = pattern[2];
+        const [a, b, c] = combination;
 
         if (
             board[a] !== "" &&
@@ -69,81 +53,45 @@ function checkWinner() {
             board[a] === board[c]
         ) {
 
-            statusText.textContent =
-                `🏆 بازیکن ${currentPlayer} برنده شد!`;
+            turnText.textContent = `🎉 ${currentPlayer} برنده شد!`;
 
-            gameActive = false;
+            gameRunning = false;
 
             return;
         }
-
     }
-
 
     if (!board.includes("")) {
 
-        statusText.textContent =
-            "🤝 بازی مساوی شد!";
+        turnText.textContent = "🤝 بازی مساوی شد";
 
-        gameActive = false;
+        gameRunning = false;
 
         return;
     }
 
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
 
-    currentPlayer =
-        currentPlayer === "X"
-            ? "O"
-            : "X";
-
-
-    statusText.textContent =
-        `نوبت ${currentPlayer}`;
-
+    turnText.textContent = `نوبت ${currentPlayer}`;
 }
 
+restartButton.addEventListener("click", restartGame);
 
 function restartGame() {
 
+    board = ["", "", "", "", "", "", "", "", ""];
+
     currentPlayer = "X";
 
-    gameActive = true;
+    gameRunning = true;
 
-    board = [
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-    ];
-
+    turnText.textContent = "نوبت X";
 
     cells.forEach(cell => {
 
         cell.textContent = "";
 
+        cell.classList.remove("x", "o");
+
     });
-
-
-    statusText.textContent = "نوبت X";
-
 }
-
-
-cells.forEach((cell, index) => {
-
-    cell.addEventListener(
-        "click",
-        () => play(index)
-    );
-
-});
-
-
-restartButton.addEventListener(
-    "click",
-    restartGame
-);
